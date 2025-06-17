@@ -1,0 +1,24 @@
+#... 其他配置...
+autoscaling:
+  enabled: true       # 启用HPA
+  minReplicas: 2      # 最小Pod副本数
+  maxReplicas: 10     # 最大Pod副本数
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80 # 当CPU平均利用率达到80%时触发伸缩
+  # - type: Resource # 可以添加内存指标
+  #   resource:
+  #     name: memory
+  #     target:
+  #       type: Utilization
+  #       averageUtilization: 70
+  # - type: Pods # 也可以基于QPS等自定义指标
+  #   pods:
+  #     metricName: http_requests_per_second
+  #     target:
+  #       type: AverageValue
+  #       averageValue: 100m # 100 requests per second per pod

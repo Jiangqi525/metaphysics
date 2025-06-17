@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "web-app.fullname". }}
+  labels:
+    {{- include "web-app.labels". | nindent 4 }}
+spec:
+  replicas: {{.Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "web-app.selectorLabels". | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "web-app.selectorLabels". | nindent 8 }}
+    spec:
+      containers:
+        - name: {{.Chart.Name }}
+          image: "{{.Values.image.repository }}:{{.Values.image.tag | default.Chart.AppVersion }}"
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz # 健康检查路径
+              port: http    # 容器端口名称
+            initialDelaySeconds: 30 # 容器启动后30秒开始检查
+            periodSeconds: 10     # 每10秒检查一次
+            timeoutSeconds: 5     # 检查超时时间
+            failureThreshold: 3   # 连续3次失败则认为不健康，重启容器
+          readinessProbe:
+            httpGet:
+              path: /readyz # 就绪检查路径
+              port: http
+            initialDelaySeconds: 5  # 容器启动后5秒开始检查
+            periodSeconds: 5      # 每5秒检查一次
+            timeoutSeconds: 3     # 检查超时时间
+            failureThreshold: 3   # 连续3次失败则认为未就绪，停止接收流量
+          resources:
+            {{- toYaml.Values.resources | nindent 12 }}

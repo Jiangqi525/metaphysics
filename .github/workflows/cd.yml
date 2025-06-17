@@ -1,0 +1,61 @@
+name: CD to Production
+
+on:
+  push:
+    branches:
+      - main # 仅当代码推送到main分支时触发
+
+jobs:
+  deploy-production:
+    runs-on: ubuntu-latest
+    environment: production # 关联GitHub环境，用于管理秘密和审批
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Helm
+      uses: azure/setup-helm@v1
+      with:
+        version: '3.8.1' # 指定Helm版本
+
+    - name: Configure Kubernetes credentials
+      run: |
+        mkdir -p ~/.kube
+        echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+        chmod 600 ~/.kube/config
+        # 验证kubectl配置
+        kubectl config use-context ${{ secrets.KUBERNETES_CONTEXT }}
+        kubectl cluster-info
+      env:
+        KUBECONFIG: ~/.kube/config
+
+    - name: Deploy to Kubernetes
+      run: |
+        helm upgrade --install jewelry-app./helm/charts/web-app \
+          --namespace ${{ secrets.NAMESPACE }} \
+          --set image.tag=${{ github.sha }} \
+          --set environment=production \
+          --set vault.address=${{ secrets.VAULT_ADDR }} \
+          --set vault.token=${{ secrets.VAULT_TOKEN }} \
+          --atomic --wait --timeout 5m # --atomic确保原子性操作，--wait等待部署完成，--timeout设置超时时间
+      env:
+        KUBECONFIG: ~/.kube/config
+
+    - name: Run post-deployment compliance check
+      run: |
+        # 确保部署的Pod已就绪
+        kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=jewelry-app -n ${{ secrets.NAMESPACE }} --timeout=300s
+        # 在任意一个web-app Pod中执行合规检查脚本
+        kubectl exec -n ${{ secrets.NAMESPACE }} $(kubectl get pod -l app.kubernetes.io/name=jewelry-app -n ${{ secrets.NAMESPACE }} -o jsonpath='{.items.metadata.name}') -- \
+          python scripts/compliance/check_config.py
+      env:
+        KUBECONFIG: ~/.kube/config
+
+    - name: Notify on success
+      if: success()
+      run: echo "Deployment to production successful!" # 可以集成Slack/Teams通知
+
+    - name: Notify on failure
+      if: failure()
+      run: echo "Deployment to production failed!" # 可以集成报警系统
