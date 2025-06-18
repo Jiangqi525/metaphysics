@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import List, Optional
 from uuid import UUID, uuid4
+import datetime  # 添加 datetime 导入
 
 
 class AggregateRoot(ABC):
@@ -23,6 +24,7 @@ class AggregateRoot(ABC):
         pass
 
 
+# 将 DomainEvent 移出 AggregateRoot 类，使其成为顶级类
 @dataclass
 class DomainEvent(ABC):
     """领域事件基类"""

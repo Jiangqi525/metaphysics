@@ -5,17 +5,22 @@
 
 from typing import List, Dict, Tuple, Optional
 from lunarcalendar import Lunar
+from src.config.loader import CONSTANTS
 
 # 天干地支和五行映射
-HEAVENLY_STEMS = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"]
-EARTHLY_BRANCHES = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"]
-WUXING_MAP = {
-    "甲": "木", "乙": "木", "丙": "火", "丁": "火", "戊": "土",
-    "己": "土", "庚": "金", "辛": "金", "壬": "水", "癸": "水",
-    "寅": "木", "卯": "木", "巳": "火", "午": "火", "辰": "土",
-    "戌": "土", "丑": "土", "未": "土", "申": "金", "酉": "金",
-    "亥": "水", "子": "水"
-}
+# HEAVENLY_STEMS = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"]
+# EARTHLY_BRANCHES = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"]
+# WUXING_MAP = {
+#     "甲": "木", "乙": "木", "丙": "火", "丁": "火", "戊": "土",
+#     "己": "土", "庚": "金", "辛": "金", "壬": "水", "癸": "水",
+#     "寅": "木", "卯": "木", "巳": "火", "午": "火", "辰": "土",
+#     "戌": "土", "丑": "土", "未": "土", "申": "金", "酉": "金",
+#     "亥": "水", "子": "水"
+# }
+
+HEAVENLY_STEMS = CONSTANTS['HEAVENLY_STEMS']
+EARTHLY_BRANCHES = CONSTANTS['EARTHLY_BRANCHES']
+WUXING_MAP = CONSTANTS['WUXING_MAP']
 
 
 class WuxingCalculator:
@@ -81,13 +86,7 @@ class WuxingCalculator:
         if not year_wuxing or not bureau_wuxing:
             return "平"
 
-        wuxing_relations = {
-            "木": {"生": "火", "克": "土", "被生": "水", "被克": "金"},
-            "火": {"生": "土", "克": "金", "被生": "木", "被克": "水"},
-            "土": {"生": "金", "克": "水", "被生": "火", "被克": "木"},
-            "金": {"生": "水", "克": "木", "被生": "土", "被克": "火"},
-            "水": {"生": "木", "克": "火", "被生": "金", "被克": "土"}
-        }
+        wuxing_relations = CONSTANTS['WUXING_RELATIONS']
 
         if year_wuxing == bureau_wuxing:
             return "比和"  # 五行相同

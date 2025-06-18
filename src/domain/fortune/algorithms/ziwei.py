@@ -18,17 +18,21 @@ import self
 from dateutil.relativedelta import relativedelta
 import swisseph as swe
 from lunarcalendar import Converter, Solar, Lunar
+from src.config.loader import CONSTANTS
 
 # 引入八字计算中的天干地支和五行映射（用于紫微斗数五行分析）
-HEAVENLY_STEMS = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"]
-EARTHLY_BRANCHES = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"]
-WUXING_MAP = {
-    "甲": "木", "乙": "木", "丙": "火", "丁": "火", "戊": "土",
-    "己": "土", "庚": "金", "辛": "金", "壬": "水", "癸": "水",
-    "寅": "木", "卯": "木", "巳": "火", "午": "火", "辰": "土",
-    "戌": "土", "丑": "土", "未": "土", "申": "金", "酉": "金",
-    "亥": "水", "子": "水"
-}
+# HEAVENLY_STEMS = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"]
+# EARTHLY_BRANCHES = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"]
+# WUXING_MAP = {
+#     "甲": "木", "乙": "木", "丙": "火", "丁": "火", "戊": "土",
+#     "己": "土", "庚": "金", "辛": "金", "壬": "水", "癸": "水",
+#     "寅": "木", "卯": "木", "巳": "火", "午": "火", "辰": "土",
+#     "戌": "土", "丑": "土", "未": "土", "申": "金", "酉": "金",
+#     "亥": "水", "子": "水"
+# }
+HEAVENLY_STEMS = CONSTANTS['HEAVENLY_STEMS']
+EARTHLY_BRANCHES = CONSTANTS['EARTHLY_BRANCHES']
+WUXING_MAP = CONSTANTS['WUXING_MAP']
 
 # 星历表配置
 EPHEMERIS_CONFIG = {

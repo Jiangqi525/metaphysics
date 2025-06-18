@@ -1,8 +1,7 @@
 # src/domain/fortune/events.py
 from dataclasses import dataclass
 from uuid import UUID
-from src.domain.core.entities import DomainEvent
-
+from src.domain.core.entities import DomainEvent  # 现在可以正确导入 DomainEvent
 
 @dataclass
 class FortuneAnalysisCreatedEvent(DomainEvent):
@@ -24,7 +23,6 @@ class FortuneAnalysisCreatedEvent(DomainEvent):
             "user_id": str(self.user_id),
             "analysis_type": self.analysis_type
         }
-
 
 @dataclass
 class FortuneAnalysisUpdatedEvent(DomainEvent):
