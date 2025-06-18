@@ -4,6 +4,8 @@ from typing import Dict, List, Optional
 from uuid import UUID
 from src.domain.core.entities import AggregateRoot
 from src.domain.core.value_objects import EnergyProfile, Money
+import decimal
+import datetime
 
 
 @dataclass

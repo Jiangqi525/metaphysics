@@ -8,11 +8,11 @@ from sqlalchemy.orm import sessionmaker
 # 必须导入所有Base的子类，否则Alembic无法识别这些表
 import src.infrastructure.persistence.orm.base
 import src.infrastructure.persistence.orm.user_models
-import src.infrastructure.persistence.orm.fortune_models
+import src.infrastructure.persistence.orm.fate_models
 import src.infrastructure.persistence.orm.jewelry_models
-import src.infrastructure.persistence.orm.spiritual_models
-import src.infrastructure.persistence.orm.compliance_models
-import src.infrastructure.persistence.orm.audit_models
+import src.infrastructure.persistence.orm.healing_models
+import src.infrastructure.persistence.orm.ecommerce_models
+import src.infrastructure.persistence.orm.social_models
 
 # ... 导入所有其他ORM模型文件
 
